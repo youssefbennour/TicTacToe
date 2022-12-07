@@ -1,5 +1,6 @@
 ﻿
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace TicTacToe
 {
@@ -12,9 +13,11 @@ namespace TicTacToe
         }
         static void Main(string[] args)
         {
-            MainGame tic = new MainGame();
+            
             while (true)
             {
+                MainGame tic = new MainGame();
+                tic.gameActive = true;
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + ("Welcome to TicTacToe".Length / 2)) + "}", "Welcome to TicTacToe"));
                 Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + ("Press 'S' to start a new game".Length / 2)+5) + "}", "Press 'S' to start a new game"));
@@ -45,7 +48,7 @@ namespace TicTacToe
                 } else {
                     tic.displayMainMenu();
                     while (tic.gameActive == true) {
-                        tic.playerMove();
+                        tic.playerMove(); 
                         Console.Clear();
                     }
                 }

@@ -76,21 +76,27 @@ namespace TicTacToe
             }
 
             Console.WriteLine("The first player to start is: " + ((this.activePlayer == 1) ? this.playerName[1] : this.playerName[0]) + "\n\n");
-            Console.Write(playerName[activePlayer] + " choose your hero (X/O) : ");
+
             char choice;
-            try {
-                choice = char.Parse(Console.ReadLine());
-            }catch (Exception InvalidChoiceException){
-                choice = 'X';
-            }
+            do {
+                Console.Write(this.playerName[this.activePlayer] + " choose your hero (X/O) : ");
+                try {
+                    choice = char.Parse(Console.ReadLine());
+                } catch (Exception InvalidChoiceException) {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invlaid choice, default hero X is set for " + this.playerName[this.activePlayer]);
+                    Console.ResetColor();
+                    choice = 'X';
+                }
+            } while (char.ToUpper(choice) != 'X' && char.ToUpper(choice) != 'O');
 
-            this.playersTags[activePlayer] = char.ToUpper(choice);
+            this.playersTags[this.activePlayer] = char.ToUpper(choice);
 
-            if (playersTags[activePlayer] == 'X'){
-                playersTags[(activePlayer + 1)% 2] = 'O';
+            if (playersTags[this.activePlayer] == 'X'){
+                playersTags[(this.activePlayer + 1)% 2] = 'O';
 
             }else{
-                playersTags[(activePlayer+ 1) % 2] = 'X';
+                playersTags[(this.activePlayer+ 1) % 2] = 'X';
             }
             
             
@@ -142,6 +148,7 @@ namespace TicTacToe
             for (int i = 0; i < 9; i += 3){
                 if (this.tags[i] == this.tags[i + 1] && this.tags[i + 1] == this.tags[i + 2]){
                     this.gameActive = false;
+                    break;
                 }
             }
 
@@ -149,6 +156,7 @@ namespace TicTacToe
             for (int i = 2; i >= 0; i--){
                 if (this.tags[5-i] == this.tags[2-i] && this.tags[2- i] == this.tags[8 - i]){
                     this.gameActive = false;
+                    break;
                 }
             }
 
@@ -157,18 +165,30 @@ namespace TicTacToe
                 this.gameActive = false;
             }
 
-            if(!this.gameActive){
-                winnerMessage();
+            bool tie = true;
+            for (int i = 0; i < 9; ++i) {
+                if (tags[i] != 'O' && tags[i]!= 'X') {
+                    tie = false;
+                }
+            }
+
+
+            if (tie) {
+                resultMessage("It's a tie! Try again", ConsoleColor.Blue);
+                this.gameActive = false;
+                Thread.Sleep(3000);
+            }else if(!this.gameActive){
+                resultMessage(((this.activePlayer == 1) ? this.playerName[1] : this.playerName[0]) + " is The winner, Congrats!\n",ConsoleColor.Green);
                 Thread.Sleep(3000);
             }
         }
 
-        public void winnerMessage(){
+        public void resultMessage(string textMessage, ConsoleColor color){
             Console.Clear();
             displayGrid();
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = color;
             Console.WriteLine();
-            animateText(((this.activePlayer == 1) ? this.playerName[1] : this.playerName[0]) + " is The winner, Congrats!\n",true, 50);
+            animateText(textMessage,true, 50);
             Console.ResetColor();
         }
 
